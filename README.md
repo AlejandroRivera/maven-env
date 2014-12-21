@@ -8,18 +8,17 @@ different Java SDK versions per project, without changing environmental variable
 
 Why I made this
 ---------------
-At my current work, our laptops are distributed with an "approved" version of Maven, which determine 
-specific global and user settings. These customizations are somewhat necessary so that everyone in the company 
-uses the same Maven repositories, we all use the same build profiles, etc. On top of that, the Maven version provided
-isn't the latest one. Oh, and the approved Java SDK we must use is Java 7.
+At my current work, our laptops are distributed with an "approved" version of Java SDK and Maven (which is a bit outdated), 
+with custom global and user Maven settings. These customizations are somewhat necessary so that everyone in the company 
+uses the same Maven repositories, we all use the same build profiles, etc. 
 
 This is all fine by me, except when I want to work on personal projects where I don't want to be limited by my company's 
 Maven/Java requirements.
 
 In the past, I used to juggle different User Settings (`~/.m2/settings.xml`) and change to environmental variables 
-(`M2_HOME` and `JAVA_HOME`), sadly this approach was very error prone because I would forget to revert configurations between 
-personal and work sessions. For this reason, I decided to create a tool that would automatically use the right Maven 
-configuration "per project".
+(`M2_HOME` and `JAVA_HOME`). Sadly this approach was very error prone because I would forget to revert configurations between 
+personal and work sessions. For this reason, I decided to create a tool that would automatically use the right Maven/Java 
+configuration "per project" while keeping a global default.
 
 How to use it
 -------------
@@ -79,3 +78,4 @@ Bash script was somewhat inspired from Atlassian's SDK which has a Maven wrapper
 License
 -------
 This utility is released under a MIT License. For a quick TL;DR, visit https://tldrlegal.com/license/mit-license
+For the full License, see the `LICENSE` file distributed with this repository.
