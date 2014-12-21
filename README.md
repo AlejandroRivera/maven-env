@@ -58,12 +58,18 @@ The output will show you what configuration is being used.
 
 Troubleshooting
 ---------------
-** The output says the command `mvn` or `mvnDebug` cannot be found! **
+**The output says the command `mvn` or `mvnDebug` cannot be found!**
+
 If you are working on a project with `.mvn` folder, ensure the `.mvn/m2_home` is correctly pointing to a valid Apache Maven 
 installation directory. A valid directory would be one that contains the `./bin/mvn` executable.
 
 If you are outside of a project with a `.mvn` folder, this utility expects the real `mvn` executable to be found within 
 your `$PATH` variable. Please ensure this is the case.
+
+**I can no longer call `mvn` outside of projects with an `.mvn` folder. The execution crashes saying something about a fork**
+
+Make sure you are using aliases to point to these scripts (as instructed in the "How To Use It' section) because I'm relying
+on the Bash script inability to call an alias itself, thus invoking the global/default Maven executables. 
 
 Credits
 -------
