@@ -45,7 +45,7 @@ How to use it
   ln -s /path/to/java/dir            .mvn/java_home           # Optional. Determines which JAVA_HOME to use for this project
   ```
   
-4. Done!
+4. Done! You can now start using `mvn` and `mvnDebug` commands which will automatically use your preferred settings.
 
 How to test it's working
 ------------------------
@@ -54,6 +54,11 @@ Position yourself into whatever directory you want, then execute:
 mvn -version --debug
 ```
 The output will show you what configuration is being used.
+
+Caveats
+-------
+1. This tool only helps if you are using Maven as your build system. If you are running your Java app directly through the `java` command or deploying it to a separate web server, your project settings will be ignored and your global Java configuration will apply.
+2. IDEs might not respect these settings since they might rely on the `M2_HOME` env variable or point directly to a Maven home directory. This means that you might not be able to configure them to use the aliases you created. 
 
 Troubleshooting
 ---------------
