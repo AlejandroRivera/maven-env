@@ -39,11 +39,12 @@ How to use it
   ```
   cd /path/to/project
   mkdir .mvn                                                  # Required. Create folder that will contain maven configs
-  ln -s /path/to/maven/dir           .mvn/m2_home             # Required. Specifies which M2_HOME to use for this project
+  ln -s /path/to/maven/dir           .mvn/m2_home             # Optional. Specifies which M2_HOME to use for this project. 
   ln -s /path/to/user_settings.xml   .mvn/user_settings.xml   # Optional. Determines which user settings to use (mvn -s)
   ln -s /path/to/global_settings.xml .mvn/global_settings.xml # Optional. Determines which global settings to use (mvn -gs).
   ln -s /path/to/java/dir            .mvn/java_home           # Optional. Determines which JAVA_HOME to use for this project
   ```
+  Note: symlinks are recommended, but you can use regular files/directories if needed.
   
 4. Done! You can now start using `mvn` and `mvnDebug` commands which will automatically use your preferred settings.
 

@@ -1,0 +1,92 @@
+#!/bin/sh
+
+DEFAULT_JAVA_HOME=${JAVA_HOME}
+DEFAULT_MVN_HOME=${M2_HOME}
+CURRENT_CMD=${0##*/}		# This will strip out the currently executed program name
+
+DEBUG=false
+for var in "$@"; do
+  if [[ "${var}" = "-X" || "${var}" = "--debug" ]]; then
+      DEBUG=true
+      echo "maven-env: A Maven Virtual Environment, like VirtualEnv is for Python."
+      echo "  Created by Alejandro Rivera (alejandro.rivera.lopez@gmail.com)"
+      echo "  Released under MIT Licensing"
+      echo ""
+      echo "maven-env settings:"
+  fi
+done
+
+# TODO: provide inline help
+#  echo "Please define a symlink to your Maven Home directory like so:"
+#  echo "$ ln -s /path/to/apache-maven-X.Y.Z /path/to/project/.mvn/m2_home"
+#  echo ""
+#  echo "You can also define a custom Maven User/Global settings by doing:"
+#  echo "$ ln -s /path/to/my_user_settings.xml /path/to/project/.mvn/user_settings.xml"
+#  echo "$ ln -s /path/to/my_global_settings.xml /path/to/project/.mvn/global_settings.xml"
+#  echo ""
+#  echo "You can also define a custom JAVA_HOME like so:"
+#  echo "$ ln -s /path/to/java /path/to/project/.mvn/java_home"
+#  echo ""
+#  exit 1
+
+
+# Search for the directory containing the .mvn in the current directory and ancestor directories.
+path=$(pwd)
+while [[ "$path" != "" && ! -e "$path/.mvn" ]]; do
+  path=${path%/*}
+done
+
+MVN_ENV_DIR=${path}/.mvn
+if [ ! -e "${MVN_ENV_DIR}" ]; then
+  if [ ${DEBUG} = true ]; then
+    echo "  No maven-env directory (.mvn) found. Executing default '${DEFAULT_MVN_HOME}/bin/${CURRENT_CMD}' command."
+    set -x
+  fi
+  ${DEFAULT_MVN_HOME}/bin/${CURRENT_CMD} "$@"
+  exit $?
+fi
+
+# Set up Java Home
+if [ -e "${MVN_ENV_DIR}/java_home" ]; then
+  JAVA_HOME="${MVN_ENV_DIR}/java_home"
+  if [ ${DEBUG} = true ]; then echo "  Java Home: ${JAVA_HOME}"; fi
+fi
+
+# Setup Maven Home
+if [ -e "${MVN_ENV_DIR}/m2_home" ]; then
+  M2_HOME="${MVN_ENV_DIR}/m2_home"
+  if [ ${DEBUG} = true ]; then echo "  Apache Maven Home: ${M2_HOME}"; fi
+else
+  M2_HOME="${DEFAULT_MVN_HOME}"
+fi
+
+PARAMS=""
+USER_SETTINGS="${MVN_ENV_DIR}/user_settings.xml"
+if [ -e "${USER_SETTINGS}" ]; then
+  PARAMS="-s ${USER_SETTINGS}"
+  if [ ${DEBUG} = true ]; then echo "  Apache Maven User Settings: ${USER_SETTINGS}"; fi
+fi
+
+GLOBAL_SETTINGS="${MVN_ENV_DIR}/global_settings.xml"
+if [ -e "${GLOBAL_SETTINGS}" ]; then
+  PARAMS="${PARAMS} -gs ${GLOBAL_SETTINGS}"
+  if [ ${DEBUG} = true ]; then echo "  Apache Maven Global Settings: ${GLOBAL_SETTINGS}"; fi
+fi
+
+if [ ${DEBUG} = true ]; then
+  echo ""
+  set -x;	# print commands to screen
+fi
+
+
+${M2_HOME}/bin/${CURRENT_CMD} ${PARAMS} "$@"
+EXIT_VALUE=$?
+
+set +x;	# stop printing commands to screen
+
+# Reset global variables
+# TODO: Is this really needed?
+JAVA_HOME=${DEFAULT_JAVA_HOME}
+M2_HOME=${DEFAULT_MVN_HOME}
+
+exit ${EXIT_VALUE}
